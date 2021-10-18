@@ -19,6 +19,7 @@
 #' @param col_types the column, types, like in  readr.
 #' @return a tibble
 #'
+#' @importFrom magrittr `%>%`
 #' @importFrom rlang enquo
 #' @importFrom rlang quo
 #' @importFrom rlang enquos
@@ -63,6 +64,7 @@ read_csv_count <- function(data_file,col_select, ..., row_filter = NULL,
 
 }
 
+#' @importFrom magrittr `%>%`
 #' @importFrom rlang enquo
 #' @importFrom rlang enquos
 #' @importFrom rlang syms

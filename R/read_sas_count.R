@@ -17,6 +17,7 @@
 #' @param name the name of the columns for counts
 #' @param weight a column to be taken as weights for the counts
 #' @return a tibble
+#' @importFrom magrittr `%>%`
 #' @importFrom rlang enquo
 #' @importFrom rlang quo
 #' @importFrom rlang enquos
