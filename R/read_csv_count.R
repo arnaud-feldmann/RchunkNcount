@@ -25,6 +25,9 @@
 #' @importFrom rlang enquos
 #' @importFrom rlang ensym
 #' @importFrom rlang syms
+#' @importFrom rlang sym
+#' @importFrom rlang quo_is_null
+#' @importFrom readr DataFrameCallback
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
@@ -44,12 +47,12 @@ read_csv_count <- function(data_file,col_select, ..., row_filter = NULL,
   if (rlang::quo_is_null(row_filter)) row_filter <- rlang::quo(TRUE)
 
   weight <- rlang::enquo(weight)
-  if (! quo_is_null(weight)) weight <- rlang::ensym(weight)
+  if (! rlang::quo_is_null(weight)) weight <- rlang::ensym(weight)
 
   mutate_quos <- rlang::enquos(...)
   mutate_cols_calculated <- rlang::syms(unname(do.call(c,lapply(mutate_quos,all.vars))))
 
-  callback <- function(x,pos) tbl %>%
+  callback <- function(x,pos) x %>%
     dplyr::filter(!! row_filter) %>%
     dplyr::mutate(!!! mutate_quos) %>%
     dplyr::group_by(dplyr::across(c(!! col_select,!!! mutate_cols_calculated))) %>%
@@ -59,7 +62,7 @@ read_csv_count <- function(data_file,col_select, ..., row_filter = NULL,
     readr::read_csv_chunked(DataFrameCallback$new(callback),
                             col_types = col_types) %>%
     dplyr::group_by(c(!! col_select,!!! mutate_cols_calculated)) %>%
-    dplyr::tally(name = name,wt = !! sym(name)) %>%
+    dplyr::tally(name = name,wt = !! rlang::sym(name)) %>%
     dplyr::ungroup()
 
 }
@@ -68,7 +71,10 @@ read_csv_count <- function(data_file,col_select, ..., row_filter = NULL,
 #' @importFrom rlang enquo
 #' @importFrom rlang enquos
 #' @importFrom rlang syms
+#' @importFrom rlang sym
+#' @importFrom readr DataFrameCallback
 #' @importFrom dplyr filter
+#' @importFrom rlang quo_is_null
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
 #' @importFrom dplyr tally
@@ -98,10 +104,10 @@ read_csv2_count <- function(data_file,col_select, ..., row_filter = NULL,
     dplyr::tally(name = name,wt = !! weight)
 
   data_file %>%
-    readr::read_csv2_chunked(callback = DataFrameCallback$new(callback),
+    readr::read_csv2_chunked(callback = readr::DataFrameCallback$new(callback),
                              col_types = col_types) %>%
     dplyr::group_by(c(!! col_select,!!! mutate_cols_calculated)) %>%
-    dplyr::tally(name = name,wt = !! sym(name)) %>%
+    dplyr::tally(name = name,wt = !! rlang::sym(name)) %>%
     dplyr::ungroup()
 
 }

@@ -23,6 +23,7 @@
 #' @importFrom rlang enquos
 #' @importFrom rlang ensym
 #' @importFrom rlang syms
+#' @importFrom rlang sym
 #' @importFrom dplyr filter
 #' @importFrom dplyr mutate
 #' @importFrom dplyr group_by
@@ -60,7 +61,7 @@ read_sas_count <- function(data_file,col_select, ..., row_filter = NULL,
                                     !! col_select,
                                     !!! rlang::syms(all.vars(row_filter)))) %>%
     dplyr::group_by(dplyr::across(c(!! col_select,!!! mutate_cols_calculated))) %>%
-    dplyr::tally(name = name,wt = !! sym(name)) %>%
+    dplyr::tally(name = name,wt = !! rlang::sym(name)) %>%
     dplyr::ungroup()
 
 }
