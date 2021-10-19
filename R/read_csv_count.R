@@ -62,7 +62,7 @@ read_csv_count <- function(data_file,col_select, ..., row_filter = NULL,
   data_file %>%
     readr::read_csv_chunked(DataFrameCallback$new(callback),
                             col_types = col_types) %>%
-    dplyr::group_by(c(!! col_select,!!! mutate_cols_calculated)) %>%
+    dplyr::group_by(dplyr::across(c(!! col_select,!!! mutate_cols_calculated))) %>%
     dplyr::tally(name = name,wt = !! rlang::sym(name)) %>%
     dplyr::ungroup()
 
@@ -108,7 +108,7 @@ read_csv2_count <- function(data_file,col_select, ..., row_filter = NULL,
   data_file %>%
     readr::read_csv2_chunked(callback = readr::DataFrameCallback$new(callback),
                              col_types = col_types) %>%
-    dplyr::group_by(c(!! col_select,!!! mutate_cols_calculated)) %>%
+    dplyr::group_by(dplyr::across(c(!! col_select,!!! mutate_cols_calculated))) %>%
     dplyr::tally(name = name,wt = !! rlang::sym(name)) %>%
     dplyr::ungroup()
 
