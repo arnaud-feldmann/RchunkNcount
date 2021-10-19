@@ -31,6 +31,7 @@
 #' @importFrom dplyr tally
 #' @importFrom dplyr ungroup
 #' @importFrom readr read_csv_chunked
+#' @export
 read_sas_count <- function(data_file,col_select, ..., row_filter = NULL,
                            chunk_size = 10000,name = "n",weight=NULL) {
 
